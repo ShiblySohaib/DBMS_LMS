@@ -15,7 +15,7 @@ def add_book():
     add_book_names = ["Book ID", "Book name", "Genre","Author"]
 
    # Display the form
-    add_book_values = easygui.multenterbox("Enter Book information", "Personal Information", add_book_names)
+    add_book_values = easygui.multenterbox("Enter Book information", "New book entry", add_book_names)
 
     sql = 'insert into books(b_id,b_name,genre,author) values(%s,%s,%s,%s)'
     c.execute(sql, add_book_values)
@@ -29,18 +29,22 @@ def delete_book():
 
 
 def issue_book():
-    s_name = input("Enter your Name : ")
-    s_id = input("Enter Reg No : ")
-    book = input("Enter Book name : ")
-    c.execute("select b_id from books where b_name = '" + book + "' and available='YES'")
+    # s_name = input("Enter your Name : ")
+    # s_id = input("Enter Reg No : ")
+    # book = input("Enter Book name : ")
+    # c.execute("select b_id from books where b_name = '" + book + "' and available='YES'")
+
+    issue_book_names = ["Name","Reg no","Book name"]
+    issue_book_values = easygui.multenterbox("Enter Book information", "Issue Book", issue_book_names)
+    c.execute("select b_id from books where b_name = '" + issue_book_values[2] + "' and available='YES'")
     book_id = c.fetchone()
     bid = book_id[0]
     print(bid)
     a = "insert into issue_details values(%s,%s,%s)"
-    data = (bid, s_id, s_name)
+    data = (bid, issue_book_values[1], issue_book_values[0])
     c.execute(a, data)
     c.execute("update books set available='no' where b_id='"+bid+" '")
-    print(book, " book issued to ", s_name)
+    print(issue_book_values[2], " book issued to ", issue_book_values[0])
 
 
 def return_book():
