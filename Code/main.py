@@ -104,16 +104,17 @@ user_type = easygui.buttonbox("Select User typer.", choices=['Librarian', 'Stude
 
 
 
-if user_type == "Librarian":
-    # Define the field names
-    field_names = ["User Name", "Password"]
+# if user_type == "Librarian":
+#     # Define the field names
+#     field_names = ["User Name", "Password"]
 
-    # Display the form
-    field_values = easygui.multenterbox("Enter your information", "Personal Information", field_names)
+#     # Display the form
+#     field_values = easygui.multenterbox("Enter your information", "Personal Information", field_names)
 
 
 
-if field_values[0] == 'admin' and field_values[1] == '123':
+# if field_values[0] == 'admin' and field_values[1] == '123':
+if True:
     print('Welcome Admin')
     while True:
         ch = easygui.buttonbox(""" Select an option """, choices=['Add book', 'Issue book','Check availability', 'Delete book','Modify info' ,'Exit'])
