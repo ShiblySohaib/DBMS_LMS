@@ -1,23 +1,25 @@
 import mysql.connector
 import easygui
-check
+
 con = mysql.connector.connect(host="localhost", user="root", passwd="", autocommit=True)
 c = con.cursor(buffered=True)  # without a buffered cursor, the results are lazily loaded
 c.execute("create database if not exists library_db")
 c.execute("use library_db")
-c.execute("create table if not exists books (b_id varchar(5) primary key,b_name varchar(50), author varchar(50), available varchar(5) Default 'yes')")
+c.execute("create table if not exists books (b_id varchar(5) primary key,b_name varchar(50),genre varchar(50), author varchar(50), available varchar(5) Default 'yes')")
 c.execute(
     "create table if not exists issue_details(b_id varchar(5), student_id varchar(10), student_Name varchar(50) Not null,foreign key(b_id) references books(b_id))")
 
 
 def add_book():
-    bid = input("Enter BOOK ID : ")
-    title = input("Enter BOOK Name : ")
-    author = input("Author name : ")
-    data = (bid, title, author)
+    # Define the field names
+    add_book_names = ["Book id", "Book name", "Genre","Author"]
+
+   # Display the form
+    add_book_values = easygui.multenterbox("Enter Book information", "Personal Information", add_book_names)
+
     sql = 'insert into books(b_id,b_name,author) values(%s,%s,%s)'
-    c.execute(sql, data)
-    print("Data Entered Successfully for book id", bid)
+    c.execute(sql, add_book_values)
+    print("Data Entered Successfully for book id", add_book_values[0])
 
 
 def delete_book():
