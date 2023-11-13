@@ -1,6 +1,6 @@
 import mysql.connector
 import easygui
-
+check
 con = mysql.connector.connect(host="localhost", user="root", passwd="", autocommit=True)
 c = con.cursor(buffered=True)  # without a buffered cursor, the results are lazily loaded
 c.execute("create database if not exists library_db")
