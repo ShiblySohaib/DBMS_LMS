@@ -1,6 +1,5 @@
 import mysql.connector
 import easygui
-asdfsdf
 
 con = mysql.connector.connect(host="localhost", user="root", passwd="", autocommit=True)
 c = con.cursor(buffered=True)  # without a buffered cursor, the results are lazily loaded
@@ -35,16 +34,13 @@ def issue_book():
     # book = input("Enter Book name : ")
     # c.execute("select b_id from books where b_name = '" + book + "' and available='YES'")
 
-    issue_book_names = ["Name","Reg no","Book name"]
+    issue_book_names = ["Student Name","Student ID","Book id"]
     issue_book_values = easygui.multenterbox("Enter Book information", "Issue Book", issue_book_names)
     c.execute("select b_id from books where b_name = '" + issue_book_values[2] + "' and available='YES'")
-    book_id = c.fetchone()
-    bid = book_id[0]
-    print(bid)
     a = "insert into issue_details values(%s,%s,%s)"
-    data = (bid, issue_book_values[1], issue_book_values[0])
+    data = (issue_book_values[2], issue_book_values[1], issue_book_values[0])
     c.execute(a, data)
-    c.execute("update books set available='no' where b_id='"+bid+" '")
+    c.execute("update books set available='no' where b_id='"+issue_book_values[2]+" '")
     print(issue_book_values[2], " book issued to ", issue_book_values[0])
 
 
@@ -60,9 +56,10 @@ def display_books():
     sql = "select * from books"
     c.execute(sql)
     my_result = c.fetchall()
-    print("Book ID\t Book title\t\tAuthor\tAvailable")
+    print(my_result)
+    print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Genre","%15s"%"Author","%20s"%"Availability")
     for i in my_result:
-        print(i[0], "\t", i[1], "  \t", i[2], "\t", i[3])
+        print("%15s"%i[0],"%15s"%i[1],"%15s"%i[2],"%20s"%i[3],"%15s"%i[4])
 
 
 def select_book():
@@ -70,19 +67,18 @@ def select_book():
     sql = "select * from books where b_name= '" + book + "'"
     c.execute(sql)
     my_result = c.fetchall()
-    print("Book ID\t Book title\t\tAuthor\tAvailable")
+    print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Genre","%15s"%"Author","%20s"%"Availability")
     for i in my_result:
-        print(i[0], "\t", i[1], "\t", i[2], "\t", i[3])
+        print("%15s"%i[0],"%15s"%i[1],"%15s"%i[2],"%20s"%i[3],"%15s"%i[4])
 
 
 def display_issued_books():
     c.execute("select issue_details. *, books.b_name from issue_details, books where issue_details.b_id = books.b_id")
     my_result = c.fetchall()
     print("list of issued books:")
-    print("Book_id  book_name  Reg_no  Student_Name")
+    print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Student ID","%20s"%"Student Name")
     for i in my_result:
-        print(i[0], "  ", i[3], "  ", i[1], "  ", i[2])
-
+        print("%15s"%i[0],"%15s"%i[3],"%15s"%i[1],"%20s"%i[2])
 
 def modify_info():
     bid = input("Enter BOOK ID : ")
