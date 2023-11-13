@@ -1,5 +1,6 @@
 import mysql.connector
 import easygui
+asdfsdf
 
 con = mysql.connector.connect(host="localhost", user="root", passwd="", autocommit=True)
 c = con.cursor(buffered=True)  # without a buffered cursor, the results are lazily loaded
@@ -122,14 +123,14 @@ user_type = easygui.buttonbox("Select User typer.", choices=['Librarian', 'Stude
 if True:
     print('Welcome Admin')
     while True:
-        ch = easygui.buttonbox(""" Select an option """, choices=['Add book', 'Issue book','Check availability', 'Delete book','Modify info' ,'Exit'])
+        ch = easygui.buttonbox(""" Select an option """, choices=['Add book', 'Issue book','Display books','Return book','Delete book','Modify info' ,'Exit'])
         if ch == 'Add book':
             add_book()
         elif ch == 'Issue book':
             issue_book()
-        elif ch == '3':
+        elif ch == 'Return book':
             return_book()
-        elif ch == 'Check availability':
+        elif ch == 'Display books':
             choice = easygui.buttonbox("Select a choice", choices=['All books', 'Issued books', 'Particular book'])
             if choice == 'All books':
                 display_books()
