@@ -17,9 +17,8 @@ def add_book():
    # Display the form
     add_book_values = easygui.multenterbox("Enter Book information", "Personal Information", add_book_names)
 
-    sql = 'insert into books(b_id,b_name,author) values(%s,%s,%s)'
+    sql = 'insert into books(b_id,b_name,genre,author) values(%s,%s,%s,%s)'
     c.execute(sql, add_book_values)
-    print("Data Entered Successfully for book id", add_book_values[0])
 
 
 def delete_book():
