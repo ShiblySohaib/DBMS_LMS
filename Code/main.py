@@ -29,11 +29,7 @@ def delete_book():
 
 
 def issue_book():
-    # s_name = input("Enter your Name : ")
-    # s_id = input("Enter Reg No : ")
-    # book = input("Enter Book name : ")
-    # c.execute("select b_id from books where b_name = '" + book + "' and available='YES'")
-
+    display_books()
     issue_book_names = ["Student Name","Student ID","Book id"]
     issue_book_values = easygui.multenterbox("Enter Book information", "Issue Book", issue_book_names)
     c.execute("select b_id from books where b_name = '" + issue_book_values[2] + "' and available='YES'")
@@ -56,10 +52,9 @@ def display_books():
     sql = "select * from books"
     c.execute(sql)
     my_result = c.fetchall()
-    print(my_result)
-    print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Genre","%15s"%"Author","%20s"%"Availability")
+    print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Genre","%15s"%"Author","%15s"%"Availability")
     for i in my_result:
-        print("%15s"%i[0],"%15s"%i[1],"%15s"%i[2],"%20s"%i[3],"%15s"%i[4])
+        print("%15s"%i[0],"%15s"%i[1],"%15s"%i[2],"%15s"%i[3],"%15s"%i[4])
 
 
 def select_book():
@@ -67,9 +62,9 @@ def select_book():
     sql = "select * from books where b_name= '" + book + "'"
     c.execute(sql)
     my_result = c.fetchall()
-    print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Genre","%15s"%"Author","%20s"%"Availability")
+    print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Genre","%15s"%"Author","%15s"%"Availability")
     for i in my_result:
-        print("%15s"%i[0],"%15s"%i[1],"%15s"%i[2],"%20s"%i[3],"%15s"%i[4])
+        print("%15s"%i[0],"%15s"%i[1],"%15s"%i[2],"%15s"%i[3],"%15s"%i[4])
 
 
 def display_issued_books():
