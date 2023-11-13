@@ -1,5 +1,6 @@
 import mysql.connector
 import easygui
+asdfsdf
 
 con = mysql.connector.connect(host="localhost", user="root", passwd="", autocommit=True)
 c = con.cursor(buffered=True)  # without a buffered cursor, the results are lazily loaded
