@@ -12,7 +12,7 @@ c.execute(
 
 def add_book():
     # Define the field names
-    add_book_names = ["Book id", "Book name", "Genre","Author"]
+    add_book_names = ["Book ID", "Book name", "Genre","Author"]
 
    # Display the form
     add_book_values = easygui.multenterbox("Enter Book information", "Personal Information", add_book_names)
@@ -22,8 +22,9 @@ def add_book():
 
 
 def delete_book():
-    bid = input("Enter BOOK ID : ")
-    c.execute("delete from books where b_id= %s", (bid,))
+    delete_book_names = ["Book ID"]
+    delete_book_values = easygui.multenterbox("Enter Book information", "Delete Book", delete_book_names)
+    c.execute(f"delete from books where b_id= {delete_book_values[0]}")
     display_books()
 
 
