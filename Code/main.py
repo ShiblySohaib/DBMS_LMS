@@ -37,9 +37,9 @@ def issue_book():
     book_details = f"Title\t:\t{selected_book[1]}\nBook ID\t:\t{selected_book[0]}\nGenre\t:\t{selected_book[2]}\nAuthor\t:\t{selected_book[3]}"
     issue_book_info = ["Student Name","Student ID"]
     issue_book_values = easygui.multenterbox(book_details,"Issue book",issue_book_info)
-    issue_date = date.today()
+    issue_date = str(date.today())
     c.execute(f"select b_id from books where b_name = '{selected_book[1]}' and available='YES'")
-    c.execute(f"insert into issue_details values('{selected_book[0]}','{issue_book_values[1]}','{issue_book_values[0]}',{issue_date})")
+    c.execute(f"insert into issue_details values('{selected_book[0]}','{issue_book_values[1]}','{issue_book_values[0]}','{issue_date}')")
     c.execute("update books set available='no' where b_id='"+selected_book[0]+" '")
     # display_books()
     # issue_book_names = ["Student Name","Student ID","Book id"]
@@ -81,10 +81,10 @@ def books_to_issue(data):
 
 def print_issuedbooks(data):
     result = "===============================================================================\n"
-    result += "|"+"%17s"%"Book ID |"+"%17s"%"Book Title |"+"%17s"%"Student ID |"+"%17s"%"Student Name |"+"%17s"%"Issue date |""\n"
+    result += "|"+"%15s"%"Book ID |"+"%17s"%"Book Title |"+"%17s"%"Student ID |"+"%14s"%"Student Name |"+"%15s"%"Issue date |"+"\n"
     result += "===============================================================================\n"
     for i in data:
-        result+="|"+"%15s"%i[0]+' |'+"%20s"%i[3]+' |'+"%15s"%i[1]+' |'+"%20s"%i[2]+" |"+"\n"
+        result+="|"+"%13s"%i[0]+' |'+"%15s"%i[3]+' |'+"%15s"%i[1]+' |'+"%12s"%i[2]+" |"+"%13s"%i[3]+" |""\n"
     result += "===============================================================================\n"
     easygui.msgbox(result)
 
@@ -109,11 +109,12 @@ def select_book():
 def display_issued_books():
     c.execute("select issue_details. *, books.b_name from issue_details, books where issue_details.b_id = books.b_id ORDER BY cast(books.b_id as int);")
     my_result = c.fetchall()
+    print(my_result)
     print_issuedbooks(my_result)
     print("list of issued books:")
     print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Student ID","%20s"%"Student Name")
     for i in my_result:
-        print("%15s"%i[0],"%15s"%i[3],"%15s"%i[1],"%20s"%i[2])
+        print("%15s"%i[0],"%15s"%i[3],"%15s"%i[1],"%20s"%i[2], "%20s"%i[3])
 
 
 def modify_info():
