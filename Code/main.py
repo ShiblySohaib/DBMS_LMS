@@ -7,8 +7,8 @@ c = con.cursor(buffered=True)  # without a buffered cursor, the results are lazi
 c.execute("create database if not exists library_db")
 c.execute("use library_db")
 c.execute("create table if not exists books (b_id varchar(5) primary key,b_name varchar(50),genre varchar(50), author varchar(50), available varchar(5) Default 'yes')")
-c.execute(
-    "create table if not exists issue_details(b_id varchar(5), student_id varchar(10), student_Name varchar(50) Not null,issue_date date, foreign key(b_id) references books(b_id))")
+c.execute("create table if not exists issue_details(b_id varchar(5), student_id varchar(10), student_Name varchar(50) Not null,issue_date date, foreign key(b_id) references books(b_id))")
+c.execute("create table if not exists users(user_name varchar(50) Not null,user_pass varchar(50) Not null)")
 
 
 def add_book():
@@ -37,9 +37,9 @@ def issue_book():
     book_details = f"Title\t:\t{selected_book[1]}\nBook ID\t:\t{selected_book[0]}\nGenre\t:\t{selected_book[2]}\nAuthor\t:\t{selected_book[3]}"
     issue_book_info = ["Student Name","Student ID"]
     issue_book_values = easygui.multenterbox(book_details,"Issue book",issue_book_info)
-    issue_date = str(date.today())
+    issue_date = date.today()
     c.execute(f"select b_id from books where b_name = '{selected_book[1]}' and available='YES'")
-    c.execute(f"insert into issue_details values('{selected_book[0]}','{issue_book_values[1]}','{issue_book_values[0]}','{issue_date}')")
+    c.execute(f"insert into issue_details values('{selected_book[0]}','{issue_book_values[1]}','{issue_book_values[0]}',{issue_date})")
     c.execute("update books set available='no' where b_id='"+selected_book[0]+" '")
     # display_books()
     # issue_book_names = ["Student Name","Student ID","Book id"]
@@ -52,15 +52,19 @@ def issue_book():
     # print(issue_book_values[2], " book issued to ", issue_book_values[0])
 
 
+def admin():
+    print("abcd")
     
 
 
 def return_book():
-    name = input("Enter your Name : ")
-    bid = input("Enter book id : ")
-    c.execute("update books set available='yes' where b_id='" + bid + "'")
-    c.execute("delete from issue_details where b_id = %s", (bid,))
-    print("book id ", bid, "book returned by ", name)
+    return_book_names = ["Student Name", "Book ID"]
+    #name = input("Enter your Name : ")
+    #bid = input("Enter book id : ")
+    return_book_values = easygui.multenterbox("Enter information", "Return book", return_book_names)
+    c.execute("update books set available='yes' where b_id='" + return_book_values[1] + "'")
+    c.execute("delete from issue_details where b_id = %s", (return_book_values[1],))
+    print("book id ", return_book_values[1], "book returned by ", return_book_values[0])
 
 
 def print_books(data):
@@ -81,10 +85,10 @@ def books_to_issue(data):
 
 def print_issuedbooks(data):
     result = "===============================================================================\n"
-    result += "|"+"%15s"%"Book ID |"+"%17s"%"Book Title |"+"%17s"%"Student ID |"+"%14s"%"Student Name |"+"%15s"%"Issue date |"+"\n"
+    result += "|"+"%17s"%"Book ID |"+"%17s"%"Book Title |"+"%17s"%"Student ID |"+"%17s"%"Student Name |"+"%17s"%"Issue date |""\n"
     result += "===============================================================================\n"
     for i in data:
-        result+="|"+"%13s"%i[0]+' |'+"%15s"%i[3]+' |'+"%15s"%i[1]+' |'+"%12s"%i[2]+" |"+"%13s"%i[3]+" |""\n"
+        result+="|"+"%15s"%i[0]+' |'+"%20s"%i[3]+' |'+"%15s"%i[1]+' |'+"%20s"%i[2]+" |"+"\n"
     result += "===============================================================================\n"
     easygui.msgbox(result)
 
@@ -109,12 +113,11 @@ def select_book():
 def display_issued_books():
     c.execute("select issue_details. *, books.b_name from issue_details, books where issue_details.b_id = books.b_id ORDER BY cast(books.b_id as int);")
     my_result = c.fetchall()
-    print(my_result)
     print_issuedbooks(my_result)
     print("list of issued books:")
     print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Student ID","%20s"%"Student Name")
     for i in my_result:
-        print("%15s"%i[0],"%15s"%i[3],"%15s"%i[1],"%20s"%i[2], "%20s"%i[3])
+        print("%15s"%i[0],"%15s"%i[3],"%15s"%i[1],"%20s"%i[2])
 
 
 def modify_info():
@@ -139,8 +142,18 @@ def modify_info():
 
 
 # Display a box with choices
-user_type = easygui.buttonbox("Select User type", choices=['Librarian', 'Student'])
+user_type = easygui.buttonbox("Select User type", choices=['Admin','Librarian', 'Student'])
 
+if user_type == "Admin":
+    # Define the field names
+    Admin_names = ["User Name", "Password"]
+
+    # Display the form
+    Admin_values = easygui.multenterbox("Enter your information", "Personal Information", Admin_names)
+
+    if Admin_values[0] == 'admin' and Admin_values[1] == '123':
+        admin()
+       
 
 
 # if user_type == "Librarian":
@@ -154,7 +167,7 @@ user_type = easygui.buttonbox("Select User type", choices=['Librarian', 'Student
 
 # if field_values[0] == 'admin' and field_values[1] == '123':
 if True:
-    print('Welcome Admin')
+    print('Welcome Librarian')
     while True:
         ch = easygui.buttonbox(""" Select an option """, choices=['Add book', 'Issue book','Display books','Return book','Delete book','Modify info' ,'Exit'])
         if ch == 'Add book':
