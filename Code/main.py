@@ -41,11 +41,13 @@ def issue_book():
 
 
 def return_book():
-    name = input("Enter your Name : ")
-    bid = input("Enter book id : ")
-    c.execute("update books set available='yes' where b_id='" + bid + "'")
-    c.execute("delete from issue_details where b_id = %s", (bid,))
-    print("book id ", bid, "book returned by ", name)
+    return_book_names = ["Your Name","Book ID"]
+    #name = input("Enter your Name : ")
+    #bid = input("Enter book id : ")
+    return_book_values = easygui.multenterbox("Enter Book information", "Return Book",return_book_names)
+    c.execute("update books set available='yes' where b_id='" + return_book_values[1] + "'")
+    c.execute("delete from issue_details where b_id = %s", (return_book_values[1],))
+    print("book id ", return_book_values[1], "book returned by ", return_book_values[0])
 
 
 def display_books():
