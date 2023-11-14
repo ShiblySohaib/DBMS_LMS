@@ -172,7 +172,7 @@ def search_book():
                 print_books(res)
                 exit()
     except:
-        display_menu()
+        return
 
 
 def display_menu():
@@ -205,7 +205,7 @@ def a_menu():
             eg.msgbox('Wrong username or Password,try again')
             home()
     except:
-        home()
+        return
 
 
 def l_menu():
