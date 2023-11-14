@@ -251,30 +251,30 @@ def s_menu():
         home()
 
 def home():
-    # Display a box with choices
-    user_type = eg.buttonbox("Select User type", choices=['Admin','Librarian', 'Student','Exit'])
+    while True:
+        user_type = eg.buttonbox("Select User type", choices=['Admin','Librarian', 'Student','Exit'])
 
-    if user_type == "Admin":
-        a_menu()
+        if user_type == "Admin":
+            a_menu()
 
-    elif user_type == "Librarian":
-        try:
-            field_names = ["User Name", "Password"]
-            field_values = eg.multenterbox("Enter your information", "Personal Information", field_names)
-            sql = f"Select user_name,user_pass from librarian where user_name='{field_values[0]}' and user_pass='{field_values[1]}'"
-            c.execute(sql)
-            librarian_res = c.fetchall()
-            if len(librarian_res)!=0:
-                l_menu()
-                home()
-            else:
-                eg.msgbox('Wrong username or Password,try again')
-                home()
-        except:
-            home()       
+        elif user_type == "Librarian":
+            try:
+                field_names = ["User Name", "Password"]
+                field_values = eg.multenterbox("Enter your information", "Personal Information", field_names)
+                sql = f"Select user_name,user_pass from librarian where user_name='{field_values[0]}' and user_pass='{field_values[1]}'"
+                c.execute(sql)
+                librarian_res = c.fetchall()
+                if len(librarian_res)!=0:
+                    l_menu()
+                    continue
+                else:
+                    eg.msgbox('Wrong username or Password,try again')
+                    home()
+            except:
+                home()       
 
-    elif user_type == "Student":
-        s_menu()
-    else:
-        home()
+        elif user_type == "Student":
+            s_menu()
+        else:
+            return
 home()
