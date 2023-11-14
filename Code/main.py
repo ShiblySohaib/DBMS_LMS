@@ -66,7 +66,7 @@ def add_librarian():
            sql = 'insert into librarian(user_name,user_pass) values(%s,%s)'
            c.execute(sql, librarian_values)
     except:
-        l_menu()    
+        return   
 
 def delete_librarian():
     try:
@@ -172,7 +172,7 @@ def search_book():
                 print_books(res)
                 exit()
     except:
-        display_menu()
+        return
 
 
 def display_menu():
@@ -205,7 +205,7 @@ def a_menu():
             eg.msgbox('Wrong username or Password,try again')
             home()
     except:
-        home()
+        return
 
 
 def l_menu():
@@ -240,7 +240,11 @@ def home():
         user_type = eg.buttonbox("Select User type", choices=['Admin','Librarian', 'Student','Exit'])
 
         if user_type == "Admin":
-            a_menu()
+            try:
+                a_menu()
+                continue
+            except:
+                continue
 
         elif user_type == "Librarian":
             try:
@@ -256,10 +260,14 @@ def home():
                     eg.msgbox('Wrong username or Password,try again')
                     home()
             except:
-                home()       
+                continue       
 
         elif user_type == "Student":
-            s_menu()
+            try:
+                s_menu()
+                continue
+            except:
+                continue
         else:
             return
 home()
