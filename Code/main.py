@@ -210,7 +210,7 @@ def a_menu():
 
 def l_menu():
     while True:
-        ch = eg.buttonbox(""" Select an option """, choices=['Add book', 'Issue book','Display books','Return book','Delete book','Modify info' ,'Exit'])
+        ch = eg.buttonbox(""" Select an option """, choices=['Add book', 'Issue book','Display books','Return book','Delete book' ,'Exit'])
         if ch == 'Add book':
             add_book()
         elif ch == 'Issue book':
