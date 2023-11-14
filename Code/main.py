@@ -85,7 +85,7 @@ def admin():
     elif admin_ch == 'Delete librarian':
         delete_librarian()
     else:
-        home()
+        return
 
 def return_book():
     return_book_names = ["Book ID"]
@@ -203,7 +203,7 @@ def a_menu():
             admin()
         else:
             eg.msgbox('Wrong username or Password,try again')
-            home()
+            return
     except:
         return
 
