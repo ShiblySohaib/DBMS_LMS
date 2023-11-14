@@ -36,8 +36,7 @@ def issue_book():
     issue_book_values = easygui.multenterbox("Enter Book information", "Issue Book", issue_book_names)
     c.execute(f"select b_id from books where b_id = '{issue_book_values[0]}' and available='YES'")
     res = c.fetchall()
-    print(res)
-    if res==None:
+    if len(res)==0:
         easygui.msgbox("Book is not available")
         return
     today = str(date.today())
@@ -51,13 +50,17 @@ def admin():
 
 
 def return_book():
-    return_book_names = ["Student Name", "Book ID"]
-    #name = input("Enter your Name : ")
-    #bid = input("Enter book id : ")
+    return_book_names = ["Book ID"]
     return_book_values = easygui.multenterbox("Enter information", "Return book", return_book_names)
-    c.execute("update books set available='yes' where b_id='" + return_book_values[1] + "'")
-    c.execute("delete from issue_details where b_id = %s", (return_book_values[1],))
-    print("book id ", return_book_values[1], "book returned by ", return_book_values[0])
+    c.execute(f"select issue_details. *, books.b_name FROM issue_details INNER JOIN books on issue_details.b_id = books.b_id HAVING issue_details.b_id = '{return_book_values[0]}'")
+    res = c.fetchall()
+    if len(res)==0:
+        easygui.msgbox('Book is not issued')
+        return
+    res = res[0]
+    c.execute("update books set available='yes' where b_id='" + return_book_values[0] + "'")
+    c.execute("delete from issue_details where b_id = %s", (return_book_values[0],))
+    easygui.msgbox(f"{res[4]} book returned by {res[1]}")
 
 
 def print_books(data):
@@ -99,7 +102,7 @@ def select_book():
 
 
 def display_issued_books():
-    c.execute("select issue_details. *, books.b_name from issue_details, books where issue_details.b_id = books.b_id ORDER BY cast(books.b_id as int);")
+    c.execute("select issue_details. *, books.b_name from issue_details INNER JOIN books on issue_details.b_id = books.b_id ORDER BY issue_details.issue_date")
     my_result = c.fetchall()
     print_issuedbooks(my_result)
     print("list of issued books:")
@@ -182,4 +185,3 @@ if True:
             break
 else:
     print("Wrong username or Password,try again")
-#fgsdgsdgdsfgkok
