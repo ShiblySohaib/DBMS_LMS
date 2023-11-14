@@ -8,7 +8,7 @@ c.execute("create database if not exists library_db")
 c.execute("use library_db")
 c.execute("create table if not exists books (b_id varchar(5) primary key,b_name varchar(50),genre varchar(50), author varchar(50), available varchar(5) Default 'yes')")
 c.execute("create table if not exists issue_details(b_id varchar(5), student_id varchar(10), student_Name varchar(50) Not null,issue_date date, foreign key(b_id) references books(b_id))")
-c.execute("create table if not exists users(user_name varchar(50) Not null,user_pass varchar(50) Not null)")
+c.execute("create table if not exists librarian(user_name varchar(50) Not null,user_pass varchar(50) Not null)")
 
 
 def add_book():
@@ -51,16 +51,45 @@ def issue_book():
     # c.execute("update books set available='no' where b_id='"+issue_book_values[2]+" '")
     # print(issue_book_values[2], " book issued to ", issue_book_values[0])
 
+def print_librarian(data):
+    result = "===============================================================================\n"
+    result += "|"+"%32s"%"User Name|"+"%27s"%"Password |"+"\n"
+    result += "===============================================================================\n"
+    for i in data:
+        result+="|"+"%30s"%i[0]+' |'+"%25s"%i[1]+' |'+"\n"
+    result += "===============================================================================\n"
+    easygui.msgbox(result)
+
+def show_librarian():
+    sql = "SELECT * FROM librarian ORDER BY user_name desc;"
+    c.execute(sql)
+    my_result = c.fetchall()
+    print_librarian(my_result)
+
+def add_librarian():
+    librarian_names = ["User name", "Password"]
+    librarian_values = easygui.multenterbox("Enter information", "Admin",  librarian_names)
+
+    sql = 'insert into librarian(user_name,user_pass) values(%s,%s)'
+    c.execute(sql, librarian_values)
+
+def delete_librarian():
+    delete_librarian_names = ["User name"]
+    delete_librarian_values = easygui.multenterbox("Enter librarian name", "Delete librarian", delete_librarian_names)
+    c.execute(f"delete from librarian where user_name = '{delete_librarian_values[0]}'")
 
 def admin():
-    print("abcd")
-    
+    admin_ch = easygui.buttonbox(""" Select an option """, choices=['Show all librarian','Add librarian', 'Delete librarian'])
+    if admin_ch == 'Show all librarian':
+        show_librarian()
+    if admin_ch == 'Add librarian':
+        add_librarian()
+    if admin_ch == 'Delete librarian':
+        delete_librarian()
 
 
 def return_book():
     return_book_names = ["Student Name", "Book ID"]
-    #name = input("Enter your Name : ")
-    #bid = input("Enter book id : ")
     return_book_values = easygui.multenterbox("Enter information", "Return book", return_book_names)
     c.execute("update books set available='yes' where b_id='" + return_book_values[1] + "'")
     c.execute("delete from issue_details where b_id = %s", (return_book_values[1],))
@@ -151,7 +180,7 @@ if user_type == "Admin":
     # Display the form
     Admin_values = easygui.multenterbox("Enter your information", "Personal Information", Admin_names)
 
-    if Admin_values[0] == 'admin' and Admin_values[1] == '123':
+    if Admin_values[0] == 'a' and Admin_values[1] == '123':
         admin()
        
 
@@ -194,4 +223,4 @@ if True:
             break
 else:
     print("Wrong username or Password,try again")
-#fgsdgsdgdsfg
+#fgsdgsdgdsfgkok
