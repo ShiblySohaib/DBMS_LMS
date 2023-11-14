@@ -194,25 +194,6 @@ def display_issued_books():
     print_issuedbooks(my_result)
 
 
-def modify_info():
-    bid = input("Enter BOOK ID : ")
-    c.execute(f"select * from books where b_id={bid}")
-    print("1. Modify name")
-    print("2. Modify Author")
-    print("3. Modify Genre")
-    print("\n\n")
-    opt = input("Enter your choice: ")
-    if opt == '1':
-        title = input("Enter book Name : ")
-        c.execute(f'UPDATE books SET books.b_name = "{title}" WHERE books.b_id = "{bid}"')
-    elif opt == '2':
-        author = input("Enter author name : ")
-        c.execute(f'UPDATE books SET books.author = "{author}" WHERE books.b_id = "{bid}"')
-    elif opt == '3':
-        genre = input("Enter genre name : ")
-        c.execute(f'UPDATE books SET books.genre = "{genre}" WHERE books.b_id = "{bid}"')
-    else:
-        print("Invalid choice")
 
 def a_menu():
     try:
@@ -240,8 +221,6 @@ def l_menu():
             display_menu()
         elif ch == 'Delete book':
             delete_book()
-        elif ch == 'Modify info':
-            modify_info()
         else:
             return
 def s_menu():
