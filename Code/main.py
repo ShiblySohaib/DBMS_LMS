@@ -51,6 +51,7 @@ def print_librarian(data):
         result+="|"+"%30s"%i[0]+' |'+"%25s"%i[1]+' |'+"\n"
     result += "===============================================================================\n"
     easygui.msgbox(result)
+    admin()
 
 def show_librarian():
     sql = "SELECT * FROM librarian ORDER BY user_name desc;"
@@ -59,11 +60,13 @@ def show_librarian():
     print_librarian(my_result)
 
 def add_librarian():
-    librarian_names = ["User name", "Password"]
-    librarian_values = easygui.multenterbox("Enter information", "Admin",  librarian_names)
-
-    sql = 'insert into librarian(user_name,user_pass) values(%s,%s)'
-    c.execute(sql, librarian_values)
+    try:
+           librarian_names = ["User name", "Password"]
+           librarian_values = easygui.multenterbox("Enter information", "Admin",  librarian_names)
+           sql = 'insert into librarian(user_name,user_pass) values(%s,%s)'
+           c.execute(sql, librarian_values)
+    except:
+        admin()    
 
 def delete_librarian():
     delete_librarian_names = ["User name"]
@@ -166,12 +169,7 @@ def modify_info():
     else:
         print("Invalid choice")
 
-
-def home():
-    # Display a box with choices
-    user_type = easygui.buttonbox("Select User type", choices=['Admin','Librarian', 'Student'])
-
-    if user_type == "Admin":
+def a_menu():
         Admin_names = ["User Name", "Password"]
         Admin_values = easygui.multenterbox("Enter your information", "Personal Information", Admin_names)
         if Admin_values[0] == 'a' and Admin_values[1] == '123':
@@ -179,7 +177,8 @@ def home():
         else:
            easygui.msgbox('Wrong username or Password,try again')
            home()
-    if user_type == "Librarian":
+
+def l_menu():
         field_names = ["User Name", "Password"]
         field_values = easygui.multenterbox("Enter your information", "Personal Information", field_names)
         sql = f"Select user_name,user_pass from librarian where user_name='{field_values[0]}' and user_pass='{field_values[1]}'"
@@ -214,4 +213,18 @@ def home():
         else:
           easygui.msgbox('Wrong username or Password,try again')
           home()
+
+def s_menu():
+    print("sdf")
+
+def home():
+    # Display a box with choices
+    user_type = easygui.buttonbox("Select User type", choices=['Admin','Librarian', 'Student'])
+
+    if user_type == "Admin":
+        a_menu()
+    if user_type == "Librarian":
+        l_menu()
+    if user_type == "Student":
+        s_menu()
 home()
