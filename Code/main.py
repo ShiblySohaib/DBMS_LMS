@@ -30,26 +30,19 @@ def delete_book():
 
 
 def issue_book():
-    sql = "select * from books"
+    sql = "SELECT * FROM `books` ORDER BY cast(b_id as int)"
     c.execute(sql)
-    my_result = c.fetchall()
-    selected_book = books_to_issue(my_result).split()
-    book_details = f"Title\t:\t{selected_book[1]}\nBook ID\t:\t{selected_book[0]}\nGenre\t:\t{selected_book[2]}\nAuthor\t:\t{selected_book[3]}"
-    issue_book_info = ["Student Name","Student ID"]
-    issue_book_values = easygui.multenterbox(book_details,"Issue book",issue_book_info)
-    issue_date = date.today()
-    c.execute(f"select b_id from books where b_name = '{selected_book[1]}' and available='YES'")
-    c.execute(f"insert into issue_details values('{selected_book[0]}','{issue_book_values[1]}','{issue_book_values[0]}',{issue_date})")
-    c.execute("update books set available='no' where b_id='"+selected_book[0]+" '")
-    # display_books()
-    # issue_book_names = ["Student Name","Student ID","Book id"]
-    # issue_book_values = easygui.multenterbox("Enter Book information", "Issue Book", issue_book_names)
-    # c.execute("select b_id from books where b_name = '" + issue_book_values[2] + "' and available='YES'")
-    # a = "insert into issue_details values(%s,%s,%s)"
-    # data = (issue_book_values[2], issue_book_values[1], issue_book_values[0])
-    # c.execute(a, data)
-    # c.execute("update books set available='no' where b_id='"+issue_book_values[2]+" '")
-    # print(issue_book_values[2], " book issued to ", issue_book_values[0])
+    issue_book_names = ["Book id","Student Name","Student ID"]
+    issue_book_values = easygui.multenterbox("Enter Book information", "Issue Book", issue_book_names)
+    c.execute(f"select b_id from books where b_id = '{issue_book_values[0]}' and available='YES'")
+    res = c.fetchall()
+    print(res)
+    if res==None:
+        easygui.msgbox("Book is not available")
+        return
+    today = str(date.today())
+    c.execute(f"insert into issue_details values('{issue_book_values[0]}','{issue_book_values[2]}','{issue_book_values[1]}','{today}')")
+    c.execute("update books set available='no' where b_id='"+issue_book_values[0]+"'")
 
 def print_librarian(data):
     result = "===============================================================================\n"
@@ -106,18 +99,13 @@ def print_books(data):
     easygui.msgbox(result)
 
 
-def books_to_issue(data):
-    result = []
-    for i in data:
-        result.append("%30s"%i[0]+"%30s"%i[1]+"%30s"%i[2]+"%30s"%i[3]+"%30s"%i[4]+"\n")
-    return easygui.choicebox('msg','it',result)
 
 def print_issuedbooks(data):
     result = "===============================================================================\n"
-    result += "|"+"%17s"%"Book ID |"+"%17s"%"Book Title |"+"%17s"%"Student ID |"+"%17s"%"Student Name |"+"%17s"%"Issue date |""\n"
+    result += "|"+"%12s"%"Book ID |"+"%17s"%"Book Title |"+"%17s"%"Student ID |"+"%17s"%"Student Name |"+"%15s"%"Issue date |"+"\n"
     result += "===============================================================================\n"
     for i in data:
-        result+="|"+"%15s"%i[0]+' |'+"%20s"%i[3]+' |'+"%15s"%i[1]+' |'+"%20s"%i[2]+" |"+"\n"
+        result+="|"+"%10s"%i[0]+' |'+"%15s"%i[3]+' |'+"%15s"%i[1]+' |'+"%15s"%i[2]+" |"+"%13s"%i[3]+" |"+"\n"
     result += "===============================================================================\n"
     easygui.msgbox(result)
 
