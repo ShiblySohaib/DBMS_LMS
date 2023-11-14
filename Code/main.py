@@ -89,9 +89,17 @@ def return_book():
         easygui.msgbox('Book is not issued')
         return
     res = res[0]
+    days = (date.today()-res[3]).days
+    print(days)
+    if days>14:
+        fine = (days-14)*20
+        payment = easygui.ynbox(f'{fine} BDT fine is due. Payment complete?')
+        if payment == False:
+            easygui.msgbox("Payment incomplete. Book was not returned.")
+            return
     c.execute("update books set available='yes' where b_id='" + return_book_values[0] + "'")
     c.execute("delete from issue_details where b_id = %s", (return_book_values[0],))
-    easygui.msgbox(f"{res[4]} book returned by {res[1]}")
+    easygui.msgbox(f"'{res[4]}' book has been successfully returned by {res[1]}")
 
 
 def print_books(data):
@@ -133,13 +141,9 @@ def select_book():
 
 
 def display_issued_books():
-    c.execute("select issue_details. *, books.b_name from issue_details INNER JOIN books on issue_details.b_id = books.b_id ORDER BY issue_details.issue_date")
+    c.execute("select issue_details. *, books.b_name from issue_details INNER JOIN books on issue_details.b_id = books.b_id ORDER BY issue_details.issue_date desc")
     my_result = c.fetchall()
     print_issuedbooks(my_result)
-    print("list of issued books:")
-    print("%15s"%"Book ID","%15s"%"Book Title","%15s"%"Student ID","%20s"%"Student Name")
-    for i in my_result:
-        print("%15s"%i[0],"%15s"%i[3],"%15s"%i[1],"%20s"%i[2])
 
 
 def modify_info():
