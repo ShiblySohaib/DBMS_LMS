@@ -131,7 +131,7 @@ def print_issuedbooks(data):
 
 
 def display_books():
-    sql = "SELECT * FROM `books` ORDER BY cast(b_id as int);"
+    sql = "SELECT * FROM `books` where available='YES' ORDER BY cast(b_id as int);"
     c.execute(sql)
     my_result = c.fetchall()
     print_books(my_result)
@@ -223,11 +223,17 @@ def l_menu():
             delete_book()
         else:
             return
+        
 def s_menu():
-    try:
-        print("sdf")
-    except:
-        home()
+        while True:
+            admin_ch = eg.buttonbox(""" Select an option """, choices=['Show all books','Search book','Exit'])
+            if admin_ch == 'Show all books':
+                display_books()
+            elif admin_ch == 'Search book':
+                search_book()
+            else:
+                return
+
 
 def home():
     while True:
