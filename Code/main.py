@@ -30,18 +30,21 @@ def delete_book():
         l_menu()
 
 def issue_book():
-    sql = "SELECT * FROM `books` ORDER BY cast(b_id as int)"
-    c.execute(sql)
-    issue_book_names = ["Book id","Student Name","Student ID"]
-    issue_book_values = eg.multenterbox("Enter Book information", "Issue Book", issue_book_names)
-    c.execute(f"select b_id from books where b_id = '{issue_book_values[0]}' and available='YES'")
-    res = c.fetchall()
-    if len(res)==0:
-        eg.msgbox("Book is not available")
+    try:
+        sql = "SELECT * FROM `books` ORDER BY cast(b_id as int)"
+        c.execute(sql)
+        issue_book_names = ["Book id","Student Name","Student ID"]
+        issue_book_values = eg.multenterbox("Enter Book information", "Issue Book", issue_book_names)
+        c.execute(f"select b_id from books where b_id = '{issue_book_values[0]}' and available='YES'")
+        res = c.fetchall()
+        if len(res)==0:
+            eg.msgbox("Book is not available")
+            return
+        today = str(date.today())
+        c.execute(f"insert into issue_details values('{issue_book_values[0]}','{issue_book_values[2]}','{issue_book_values[1]}','{today}')")
+        c.execute("update books set available='no' where b_id='"+issue_book_values[0]+"'")
+    except:
         return
-    today = str(date.today())
-    c.execute(f"insert into issue_details values('{issue_book_values[0]}','{issue_book_values[2]}','{issue_book_values[1]}','{today}')")
-    c.execute("update books set available='no' where b_id='"+issue_book_values[0]+"'")
 
 def print_librarian(data):
     result = "===============================================================================\n"
@@ -88,25 +91,28 @@ def admin():
         home()
 
 def return_book():
-    return_book_names = ["Book ID"]
-    return_book_values = eg.multenterbox("Enter information", "Return book", return_book_names)
-    c.execute(f"select issue_details. *, books.b_name FROM issue_details INNER JOIN books on issue_details.b_id = books.b_id HAVING issue_details.b_id = '{return_book_values[0]}'")
-    res = c.fetchall()
-    if len(res)==0:
-        eg.msgbox('Book is not issued')
-        return
-    res = res[0]
-    days = (date.today()-res[3]).days
-    print(days)
-    if days>14:
-        fine = (days-14)*20
-        payment = eg.ynbox(f'{fine} BDT fine is due. Payment complete?')
-        if payment == False:
-            eg.msgbox("Payment incomplete. Book was not returned.")
+    try:
+        return_book_names = ["Book ID"]
+        return_book_values = eg.multenterbox("Enter information", "Return book", return_book_names)
+        c.execute(f"select issue_details. *, books.b_name FROM issue_details INNER JOIN books on issue_details.b_id = books.b_id HAVING issue_details.b_id = '{return_book_values[0]}'")
+        res = c.fetchall()
+        if len(res)==0:
+            eg.msgbox('Book is not issued')
             return
-    c.execute("update books set available='yes' where b_id='" + return_book_values[0] + "'")
-    c.execute("delete from issue_details where b_id = %s", (return_book_values[0],))
-    eg.msgbox(f"'{res[4]}' book has been successfully returned by {res[1]}")
+        res = res[0]
+        days = (date.today()-res[3]).days
+        print(days)
+        if days>14:
+            fine = (days-14)*20
+            payment = eg.ynbox(f'{fine} BDT fine is due. Payment complete?')
+            if payment == False:
+                eg.msgbox("Payment incomplete. Book was not returned.")
+                return
+        c.execute("update books set available='yes' where b_id='" + return_book_values[0] + "'")
+        c.execute("delete from issue_details where b_id = %s", (return_book_values[0],))
+        eg.msgbox(f"'{res[4]}' book has been successfully returned by {res[1]}")
+    except:
+        return
 
 
 def print_books(data):
@@ -143,56 +149,58 @@ def search_book():
         value = eg.buttonbox("Search by:", choices=['Title','Author','Genre'])
         if value == 'Title':
             title = eg.enterbox("Enter title")
-            c.execute(f"SELECT * FROM `books` where b_name like '%{title}%' and available = 'YES' ORDER BY cast(b_id as int)")
-            res = c.fetchall()
-            if len(res)==0:
-                eg.msgbox("No books found")
-                exit()
-            else:
-                print_books(res)
-                exit()
+            try:
+                c.execute(f"SELECT * FROM `books` where b_name like '%{title}%' and available = 'YES' ORDER BY cast(b_id as int)")
+                res = c.fetchall()
+                if len(res)==0:
+                    eg.msgbox("No books found")
+                else:
+                    print_books(res)
+            except:
+                return
         elif value == 'Author':
             author = eg.enterbox("Enter title")
             c.execute(f"SELECT * FROM `books` where author like '%{author}%' and available = 'YES' ORDER BY cast(b_id as int)")
             res = c.fetchall()
             if len(res)==0:
                 eg.msgbox("No books found")
-                exit()
             else:
                 print_books(res)
-                exit()
         else:
             genre = eg.enterbox("Enter title")
             c.execute(f"SELECT * FROM `books` where genre like '%{genre}%' and available = 'YES' ORDER BY cast(b_id as int)")
             res = c.fetchall()
             if len(res)==0:
                 eg.msgbox("No books found")
-                exit()
             else:
                 print_books(res)
-                exit()
     except:
-        display_menu()
+        return
 
 
 def display_menu():
-    choice = eg.buttonbox("Select a choice", choices=['All books', 'Issued books', 'Particular book'])
-    if choice == 'All books':
-        display_books()
-    elif choice == 'Issued books':
-        display_issued_books()
-    elif choice == 'Particular book':
-        search_book()
-    else:
-        print('wrong choice')
-
+    try:
+        choice = eg.buttonbox("Select a choice", choices=['All books', 'Issued books', 'Particular book'])
+        if choice == 'All books':
+            display_books()
+        elif choice == 'Issued books':
+            display_issued_books()
+        elif choice == 'Particular book':
+            search_book()
+        else:
+            print('wrong choice')
+    except:
+        return
 
 
 def display_issued_books():
-    c.execute("select issue_details. *, books.b_name from issue_details INNER JOIN books on issue_details.b_id = books.b_id ORDER BY issue_details.issue_date desc")
-    my_result = c.fetchall()
-    print_issuedbooks(my_result)
-
+    try:
+        c.execute("select issue_details. *, books.b_name from issue_details INNER JOIN books on issue_details.b_id = books.b_id ORDER BY issue_details.issue_date desc")
+        my_result = c.fetchall()
+        print_issuedbooks(my_result)
+    except:
+        return
+    
 
 def modify_info():
     bid = input("Enter BOOK ID : ")
@@ -224,7 +232,7 @@ def a_menu():
             eg.msgbox('Wrong username or Password,try again')
             home()
     except:
-        home()
+        return
 
 
 def l_menu():
