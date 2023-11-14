@@ -138,12 +138,50 @@ def display_books():
 
 
 
-def select_book():
-    book = input('enter the name of book')
-    sql = "select * from books where b_name= '" + book + "'"+"ORDER BY cast(b_id as int);"
-    c.execute(sql)
-    my_result = c.fetchall()
-    print_books(my_result)
+def search_book():
+    try:
+        value = eg.buttonbox("Search by:", choices=['Title','Author','Genre'])
+        if value == 'Title':
+            title = eg.enterbox("Enter title")
+            c.execute(f"SELECT * FROM `books` where b_name like '%{title}%' and available = 'YES' ORDER BY cast(b_id as int)")
+            res = c.fetchall()
+            if len(res)==0:
+                eg.msgbox("No books found")
+                search_book()  
+            else:
+                print_books(res)
+        elif value == 'Author':
+            author = eg.enterbox("Enter title")
+            c.execute(f"SELECT * FROM `books` where author like '%{author}%' and available = 'YES' ORDER BY cast(b_id as int)")
+            res = c.fetchall()
+            if len(res)==0:
+                eg.msgbox("No books found")
+                search_book()  
+            else:
+                print_books(res)
+        else:
+            genre = eg.enterbox("Enter title")
+            c.execute(f"SELECT * FROM `books` where genre like '%{genre}%' and available = 'YES' ORDER BY cast(b_id as int)")
+            res = c.fetchall()
+            if len(res)==0:
+                eg.msgbox("No books found")
+                search_book()  
+            else:
+                print_books(res)
+    except:
+        display_menu()
+
+
+def display_menu():
+    choice = eg.buttonbox("Select a choice", choices=['All books', 'Issued books', 'Particular book'])
+    if choice == 'All books':
+        display_books()
+    elif choice == 'Issued books':
+        display_issued_books()
+    elif choice == 'Particular book':
+        search_book()
+    else:
+        print('wrong choice')
 
 
 
@@ -196,15 +234,7 @@ def l_menu():
         elif ch == 'Return book':
             return_book()
         elif ch == 'Display books':
-            choice = eg.buttonbox("Select a choice", choices=['All books', 'Issued books', 'Particular book'])
-            if choice == 'All books':
-                display_books()
-            elif choice == 'Issued books':
-                display_issued_books()
-            elif choice == 'Particular book':
-                select_book()
-            else:
-                print('wrong choice')
+            display_menu()
         elif ch == 'Delete book':
             delete_book()
         elif ch == 'Modify info':
