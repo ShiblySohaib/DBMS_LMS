@@ -118,7 +118,6 @@ def print_issuedbooks(data):
     result += "|"+"%12s"%"Book ID |"+"%17s"%"Book Title |"+"%17s"%"Student ID |"+"%17s"%"Student Name |"+"%15s"%"Issue date |"+"\n"
     result += "===============================================================================\n"
     for i in data:
-        print(i)
         result+="|"+"%10s"%i[0]+' |'+"%15s"%i[4]+' |'+"%15s"%i[1]+' |'+"%15s"%i[2]+" |"+"%13s"%i[3]+" |"+"\n"
     result += "===============================================================================\n"
     easygui.msgbox(result)
