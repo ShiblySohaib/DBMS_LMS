@@ -167,56 +167,48 @@ def modify_info():
         print("Invalid choice")
 
 
-# Display a box with choices
-user_type = easygui.buttonbox("Select User type", choices=['Admin','Librarian', 'Student'])
+def home():
+    # Display a box with choices
+    user_type = easygui.buttonbox("Select User type", choices=['Admin','Librarian', 'Student'])
 
-if user_type == "Admin":
-    # Define the field names
-    Admin_names = ["User Name", "Password"]
-
-    # Display the form
-    Admin_values = easygui.multenterbox("Enter your information", "Personal Information", Admin_names)
-
-    if Admin_values[0] == 'a' and Admin_values[1] == '123':
-        admin()
-       
-
-
-# if user_type == "Librarian":
-#     # Define the field names
-#     field_names = ["User Name", "Password"]
-
-#     # Display the form
-#     field_values = easygui.multenterbox("Enter your information", "Personal Information", field_names)
-
-
-
-# if field_values[0] == 'admin' and field_values[1] == '123':
-if True:
-    print('Welcome Librarian')
-    while True:
-        ch = easygui.buttonbox(""" Select an option """, choices=['Add book', 'Issue book','Display books','Return book','Delete book','Modify info' ,'Exit'])
-        if ch == 'Add book':
-            add_book()
-        elif ch == 'Issue book':
-            issue_book()
-        elif ch == 'Return book':
-            return_book()
-        elif ch == 'Display books':
-            choice = easygui.buttonbox("Select a choice", choices=['All books', 'Issued books', 'Particular book'])
-            if choice == 'All books':
-                display_books()
-            elif choice == 'Issued books':
-                display_issued_books()
-            elif choice == 'Particular book':
-                select_book()
-            else:
-                print('wrong choice')
-        elif ch == 'Delete book':
-            delete_book()
-        elif ch == 'Modify info':
-                modify_info()
+    if user_type == "Admin":
+        Admin_names = ["User Name", "Password"]
+        Admin_values = easygui.multenterbox("Enter your information", "Personal Information", Admin_names)
+        if Admin_values[0] == 'a' and Admin_values[1] == '123':
+            admin()
+    if user_type == "Librarian":
+        field_names = ["User Name", "Password"]
+        field_values = easygui.multenterbox("Enter your information", "Personal Information", field_names)
+        sql = f"Select user_name,user_pass from librarian where user_name='{field_values[0]}' and user_pass='{field_values[1]}'"
+        c.execute(sql)
+        librarian_res = c.fetchall()
+        if len(librarian_res)!=0:
+          easygui.msgbox('Welcome Librarian')
+          while True:
+             ch = easygui.buttonbox(""" Select an option """, choices=['Add book', 'Issue book','Display books','Return book','Delete book','Modify info' ,'Exit'])
+             if ch == 'Add book':
+                add_book()
+             elif ch == 'Issue book':
+                issue_book()
+             elif ch == 'Return book':
+                return_book()
+             elif ch == 'Display books':
+               choice = easygui.buttonbox("Select a choice", choices=['All books', 'Issued books', 'Particular book'])
+               if choice == 'All books':
+                 display_books()
+               elif choice == 'Issued books':
+                 display_issued_books()
+               elif choice == 'Particular book':
+                 select_book()
+               else:
+                 print('wrong choice')
+             elif ch == 'Delete book':
+               delete_book()
+             elif ch == 'Modify info':
+              modify_info()
+             else:
+               break
         else:
-            break
-else:
-    print("Wrong username or Password,try again")
+          easygui.msgbox('Wrong username or Password,try again')
+          home()
+home()
