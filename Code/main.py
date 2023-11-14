@@ -172,6 +172,9 @@ def home():
         Admin_values = easygui.multenterbox("Enter your information", "Personal Information", Admin_names)
         if Admin_values[0] == 'a' and Admin_values[1] == '123':
             admin()
+        else:
+           easygui.msgbox('Wrong username or Password,try again')
+           home()
     if user_type == "Librarian":
         field_names = ["User Name", "Password"]
         field_values = easygui.multenterbox("Enter your information", "Personal Information", field_names)
