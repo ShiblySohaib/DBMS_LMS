@@ -18,7 +18,7 @@ def add_book():
         sql = 'insert into books(b_id,b_name,genre,author) values(%s,%s,%s,%s)'
         c.execute(sql, add_book_values)
     except:
-        l_menu()
+        return
 
 def delete_book():
     try:
@@ -27,7 +27,7 @@ def delete_book():
         c.execute(f"delete from books where b_id= {delete_book_values[0]}")
         display_books()
     except:
-        l_menu()
+        return
 
 def issue_book():
     try:
@@ -48,10 +48,10 @@ def issue_book():
 
 def print_librarian(data):
     result = "===============================================================================\n"
-    result += "|"+"%32s"%"User Name|"+"%27s"%"Password |"+"\n"
+    result += "|"+"%39s"%"User Name|"+"%39s"%"Password |"+"\n"
     result += "===============================================================================\n"
     for i in data:
-        result+="|"+"%30s"%i[0]+' |'+"%25s"%i[1]+' |'+"\n"
+        result+="|"+"%37s"%i[0]+' |'+"%37s"%i[1]+' |'+"\n"
     result += "===============================================================================\n"
     eg.msgbox(result)
     admin()
