@@ -147,27 +147,30 @@ def search_book():
             res = c.fetchall()
             if len(res)==0:
                 eg.msgbox("No books found")
-                search_book()  
+                exit()
             else:
                 print_books(res)
+                exit()
         elif value == 'Author':
             author = eg.enterbox("Enter title")
             c.execute(f"SELECT * FROM `books` where author like '%{author}%' and available = 'YES' ORDER BY cast(b_id as int)")
             res = c.fetchall()
             if len(res)==0:
                 eg.msgbox("No books found")
-                search_book()  
+                exit()
             else:
                 print_books(res)
+                exit()
         else:
             genre = eg.enterbox("Enter title")
             c.execute(f"SELECT * FROM `books` where genre like '%{genre}%' and available = 'YES' ORDER BY cast(b_id as int)")
             res = c.fetchall()
             if len(res)==0:
                 eg.msgbox("No books found")
-                search_book()  
+                exit()
             else:
                 print_books(res)
+                exit()
     except:
         display_menu()
 
